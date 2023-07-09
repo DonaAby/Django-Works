@@ -1,0 +1,37 @@
+{%extends 'base.html'%}
+{%block title_block%}
+<title>Task List</title>
+{%endblock%}
+{%block bodyblock%}
+<a href="{%url 'task-add'%}" class="btn btn-outline-danger at-4" style="float:right;">Add Todo</a>
+<h1 class="text-center">Task List</h1>
+{%for m in messages%}
+    <div class="'alert alert-warning alert-dismissible fade show" role="'alert">
+    <strong>{{m}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+{%endfor%}
+<table class="table table-stripped">
+    <tr>
+        <th>Sl.No</th>
+        <th>TaskName</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>Created date</th>
+        <th>Action</th>
+    </tr>
+    {%for t in tasks%}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{t.task_name}}</td>
+        <td>{{t.user}}</td>
+        <td>{{t.status}}</td>
+        <td>{{t.created_date}}</td>
+        <td>
+            <a href="{%url 'task-detail' t.id%}" class="btn btn-danger text-white">Detail</a>
+           
+        </td>
+    </tr>
+    {%endfor%}
+    {%endblock%}
+</table>

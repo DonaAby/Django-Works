@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tasks','crm',
+    'tasks','crm','crmapi','rest_framework',
+    'todoapi',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [

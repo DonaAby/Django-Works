@@ -1,0 +1,32 @@
+{%extends 'base.html'%}
+{%block title_block%}
+<title>movie-detail</title>
+{%endblock%}
+{%block bodyblock%}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <div class="card" style="width: 18rem;">
+            {%if movies.picture%}
+
+              <img src="{{movies.picture.url}}" class="card-img-top" alt="...">
+            {%endif%}
+            <div class="card-body">
+              <h5 class="card-title">{{movies.movie_name}}</h5>
+              
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">{{movies.year}}</li>
+              <li class="list-group-item">{{movies.genres}}</li>
+              <li class="list-group-item">{{movies.runtime}}</li>
+              <li class="list-group-item">{{movies.language}}</li>
+            </ul>
+            <div class="card-body">
+              <a href="{%url 'movies-edit' movies.id%}" class="btn btn-outline-warning form-control">Edit</a>
+              <a href="{%url 'movies-delete' movies.id%}" class="btn btn-outline-danger form-control    ">Delete</a>
+            </div>
+          </div>
+    </div>
+    <div class="col-2"></div>
+</div>
+{%endblock%}

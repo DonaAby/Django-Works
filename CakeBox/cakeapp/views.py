@@ -3,6 +3,9 @@ from django.views.generic import View
 from django import forms
 from cakeapp.models import Cakes
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate,login,logout
+from django.contrib import messages
 
 
 class CakeForm(forms.ModelForm):
@@ -21,10 +24,12 @@ class CakeForm(forms.ModelForm):
             "picture":forms.FileInput(attrs={"class":"form-control"})
              }
 
-class RegistrationForm(forms.ModelForm):
+class RegistrationForm(UserCreationForm):
+    password1=forms.CharField(widget=forms.PasswordInput(attrs={"class":"form-control"}))
+    password2=forms.CharField(widget=forms.TextInput(attrs={"class":"form-control"}))
     class Meta:
         model=User
-        fields=["first_name","last_name","email","username","password"]
+        fields=["first_name","last_name","email","username","password1","password2"]
         widgets={
             "first_name":forms.TextInput(attrs={"class":"form-control"}),
             "last_name":forms.TextInput(attrs={"class":"form-control"}),
@@ -32,11 +37,40 @@ class RegistrationForm(forms.ModelForm):
             "username":forms.TextInput(attrs={"class":"form-control"}),
             "password":forms.PasswordInput(attrs={"class":"form-control"}),
         }
+class LoginForm(forms.Form):
+    username=forms.CharField(widget=forms.TextInput(attrs={"class":"form-control"}))
+    password=forms.CharField(widget=forms.PasswordInput(attrs={"class":"form-control"}))
 
-class SignUpView(View):
+
+class SignUpView(View): #register
     def get(self,request,*args,**kwargs):
         form=RegistrationForm()
-        return render(request,"register.html",{"form":form})        
+        return render(request,"register.html",{"form":form})
+    def post(self,request,*args,**kwargs):
+        form=RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Registered successfully")
+            return redirect("signin")
+        messages.error(request,"Error")
+        return render(request,"register.html",{"form":form})   
+
+class SignInView(View): #sign in 
+    def get(self,request,*args,**kwargs):
+        form=LoginForm()
+        return render(request,"login.html",{"form":form})
+    def post(self,request,*args,**kwargs):
+        form=LoginForm(request.POST)
+        if form.is_valid():
+            uname=form.cleaned_data.get("username")
+            pwd=form.cleaned_data.get("password")
+            usr=authenticate(request,username=uname,password=pwd)
+            if usr:
+                login(request,usr)
+                messages.success(request,"logged in")
+                return redirect("cake-list")
+        messages.error(request,"Error")    
+        return render(request,"login.html",{"form":form})            
     
 class CakeCreateView(View):
     def get(self,request,*args,**kwargs):
@@ -46,7 +80,9 @@ class CakeCreateView(View):
         form=CakeForm(request.POST,files=request.FILES)
         if form.is_valid():
             form.save() 
+            messages.success(request,"Created successfully")
             return redirect("cake-list")
+        messages.error(request,"not created")
         return render(request,"cake-add.html",{"form":form})
     
 class CakeListView(View):
@@ -64,6 +100,7 @@ class CakeDeleteView(View):
     def get(self,request,*args,**kwargs):
         id=kwargs.get("pk")
         Cakes.objects.get(id=id).delete()
+        messages.success(request,"removed successfully")
         return redirect("cake-list")
     
 class CakeEditView(View):
@@ -78,7 +115,13 @@ class CakeEditView(View):
         form=CakeForm(instance=ck,data=request.POST,files=request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request,"edited successfully")
             return redirect("cake-detail",pk=id)
+        messages.error(request,"not updated")
         return render(request,"cake-edit.html",{"form":form})     
+
+def signout_view(request,*args,**kwargs):
+    logout(request)
+    return redirect("signin")     
             
     

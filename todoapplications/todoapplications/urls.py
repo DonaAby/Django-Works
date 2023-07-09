@@ -20,6 +20,17 @@ from crm import views as crm_views
 from django.conf import settings
 from django.conf.urls.static import static
 
+from crmapi import views as api_views
+from rest_framework.routers import DefaultRouter
+from todoapi import views as todo_views
+from rest_framework.authtoken.views import ObtainAuthToken
+
+router=DefaultRouter()
+router.register("api/employees",api_views.EmployeesView,basename="employees")
+
+router.register("api/v1/employees",api_views.EmployeeViewsetView,basename="vemployees")
+router.register("api/users",todo_views.UserView,basename="users")
+router.register("api/todos",todo_views.TodosView,basename="todos"),
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,5 +46,8 @@ urlpatterns = [
     path("employees/<int:pk>/remove/",crm_views.EmployeeDeleteView.as_view(),name="emp-delete"),
     path("employees/<int:pk>/change/",crm_views.EmployeeEditView.as_view(),name="emp-edit"),
     path("register/",crm_views.SignUpView.as_view(),name="register"),
+    path("signin/",crm_views.SignInView.as_view(),name="signin"),
+    path("logout/",crm_views.signout_view,name="signout"),
+    path("api/token/",ObtainAuthToken.as_view()),
     
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+router.urls + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

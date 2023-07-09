@@ -1,0 +1,18 @@
+{%extends 'base.html'%}
+{%block title_block%}
+<title>movie-add</title>
+{%endblock%}
+{%block bodyblock%}
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <form action="" method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.as_p}}
+            <input type="submit" value="add" class="btn btn-success">
+
+        </form>
+    </div>
+{%endblock%}    
+    <div class="col-4"></div>
+</div>

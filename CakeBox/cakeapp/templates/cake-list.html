@@ -11,6 +11,8 @@
     <div class="container">
         <table class="table table-striped">
             <caption class="caption-top">Cake List</caption>
+            welcome{{request.user}}
+        <a href="{%url 'signout'%}">logout</a>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
@@ -24,8 +26,12 @@
             </tr>
             {% for c in cake%}
             <tr>
-                
-                <td>{{c.id}}</td>
+                {%if c.picture%}
+                <td>
+                    <img src="{{c.picture.url}}" alt="" width="60%" height="120px">
+                </td>
+                {%endif%}
+                <td>{{forloop.counter}}</td>
                 <td>{{c.name}}</td>
                 <td>{{c.flavour}}</td>
                 <td>{{c.price}}</td>

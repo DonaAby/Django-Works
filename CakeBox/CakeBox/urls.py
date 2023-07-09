@@ -18,6 +18,11 @@ from django.urls import path
 from cakeapp import views
 from django.conf import settings
 from django.conf.urls.static import static
+from cakeapi import views as api_views
+from rest_framework.routers import DefaultRouter
+
+router=DefaultRouter()
+router.register("api/cakes",api_views.CakeView,basename="cakes")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +32,8 @@ urlpatterns = [
     path("cake/<int:pk>/remove/",views.CakeDeleteView.as_view(),name="cake-delete"),
     path("cake/<int:pk>/change/",views.CakeEditView.as_view(),name="cake-edit"),
     path("register/",views.SignUpView.as_view(),name="register"),
+    path("signin/",views.SignInView.as_view(),name="signin"),
+    path("logout/",views.signout_view,name="signout"),
 
 
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+router.urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

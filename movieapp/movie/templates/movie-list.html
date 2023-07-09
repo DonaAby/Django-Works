@@ -1,0 +1,36 @@
+{%extends 'base.html'%}
+{%block title_block%}
+<title>Movie List</title>
+{%endblock%}
+{%block bodyblock%}
+
+<h1 class="text-center">Movie List</h1>
+{%for m in messages%}
+    <div class="'alert alert-warning alert-dismissible fade show" role="'alert">
+    <strong>{{m}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+{%endfor%}
+<table class="table table-stripped">
+    <tr>
+        <th>Sl.No</th>
+        <th>Movie Name</th>
+        <th>Year</th>
+        <th>Language</th>
+        
+    </tr>
+    {%for f in movie%}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{f.movie_name}}</td>
+        <td>{{f.year}}</td>
+        <td>{{f.Language}}</td>
+        
+        <td>
+            <a href="{%url 'movie-detail' f.id%}" class="btn btn-danger text-white">Detail</a>
+           
+        </td>
+    </tr>
+    {%endfor%}
+    {%endblock%}
+</table>
